@@ -52,10 +52,8 @@ def make_voice(text, path):
     """Generate narration offline using an installed system voice."""
     import pyttsx3
 
-    engine = pyttsx3.init()
-    engine.setProperty("rate", 155)
-    engine.save_to_file(text, str(path))
-    engine.runAndWait()
+    tts = gTTS(text=text, lang="en", slow=False)
+tts.save(str(path))
 
 
 def make_scene(line1, line2, index, total, out_path):
