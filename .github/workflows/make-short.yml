@@ -1,0 +1,46 @@
+
+name: Create Love Story Short
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "story.py"
+      - "requirements.txt"
+      - ".github/workflows/make-short.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  create-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get project files
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak fonts-dejavu-core
+
+      - name: Install Python libraries
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate video
+        run: python story.py
+
+      - name: Save video draft
+        uses: actions/upload-artifact@v4
+        with:
+          name: love-story-short-draft
+          path: output/
+          if-no-files-found: error
+          retention-days: 7
